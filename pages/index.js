@@ -3,7 +3,7 @@ import { Button, Flex, Heading, Icon } from "@chakra-ui/react"
 import { useAuth } from '@/lib/auth';
 
 export default function Home() {
-  const auth = useAuth();
+  const { user, signinWithGithub } = useAuth();
 
   return (
     <Flex align="center" direction="column" justify="center" h="100vh">
@@ -19,13 +19,20 @@ export default function Home() {
         />
       </Icon>
 
-      {auth.user ?
-        (
-          <Button onClick={() => auth.signout()}>Sign out</Button>
-        ) : (
-          <Button onClick={() => auth.signinWithGithub()}>Sign In</Button>
-        )
-      }
+      {user ? (
+        <Button
+          as="a"
+          href="/dashboard"
+          mt={4}
+        >
+          View Dashboard
+        </Button>
+      ) : (
+          <Button
+            onClick={() => signinWithGithub()}
+            mt={4}
+          >Sign In</Button>
+        )}
     </Flex>
   )
 }

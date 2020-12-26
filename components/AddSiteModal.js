@@ -1,5 +1,3 @@
-import { useForm } from "react-hook-form";
-import { createSite } from "@/lib/db";
 import {
   Button,
   FormControl,
@@ -12,15 +10,48 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure
+  useDisclosure,
+  useToast
 } from "@chakra-ui/react";
+import { createSite } from "@/lib/db";
+import { useAuth } from "@/lib/auth";
+import { mutate } from 'swr';
+import { useForm } from "react-hook-form";
 
-function AddSiteModal() {
+function AddSiteModal({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { handleSubmit, register } = useForm();
+  const { user } = useAuth();
+  const toast = useToast();
 
-  const onCreateSite = (values) => {
-    createSite(values);
+  const onCreateSite = ({ name, url }) => {
+    const newSite = {
+      authorId: user.uid,
+      createdAt: new Date().toISOString(),
+      name,
+      url
+    };
+
+    createSite(newSite);
+
+    toast({
+      position: "top-right",
+      title: "Success!",
+      description: "We've added your site.",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+
+    mutate(
+      '/api/sites',
+      async (data) => {
+        return { sites: [...data.sites, newSite] };
+      },
+      false
+    );
+
+    onClose();
   };
 
   return (
@@ -32,7 +63,7 @@ function AddSiteModal() {
         size="md"
         variant="solid"
       >
-        Add your first Site
+        {children}
       </Button>
 
       <Modal
