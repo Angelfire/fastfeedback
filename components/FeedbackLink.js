@@ -7,7 +7,7 @@ const FeedbackLink = ({ siteId }) => {
         Leave a comment →
       </Link>
       <Link fontSize="xs" color="blackAlpha.500" href="/">
-        Powered by Fast Feedback
+        Powered by Fast Feedback (pre-alpha)
       </Link>
     </Flex>
   );

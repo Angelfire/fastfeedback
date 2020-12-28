@@ -13,7 +13,8 @@ export async function getStaticProps(context) {
   return {
     props: {
       initialFeedback: feedback
-    }
+    },
+    revalidate: 1
   };
 }
 
@@ -73,12 +74,12 @@ const FeedbackPage = ({ initialFeedback }) => {
           </FormControl>
         </Box>
       )}
-      {allFeedback.map((feedback) => {
-        const { author, createdAt, id, text } = feedback;
+      {allFeedback.map((feedback, i) => {
+        const { author, createdAt, text } = feedback;
 
         return (
           <Feedback
-            key={id}
+            key={i}
             author={author}
             createdAt={createdAt}
             text={text}
